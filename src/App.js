@@ -1,24 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from "react";
 
 function App() {
+  const [data, setData] = useState({});
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  async function fetchData() {
+    const getData = await fetch("https://api.github.com/users/juanigallo");
+    const json = await getData.json();
+
+    const data = {
+      profile: json.login,
+      name: json.name,
+      description: json.bio
+    };
+
+    setData(data);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <h1>{data.name}</h1>
+      <p>{data.description}</p>
+      <a href={`https://github.com/${data.profile}`}>
+        <button>Ir a Github</button>
+      </a>
+    </>
   );
 }
 
